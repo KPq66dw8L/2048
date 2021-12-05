@@ -3,7 +3,7 @@
 * @Purpose: Create the game 2048.
 * @Author: Axel Expósito Ragaigne && Julien Herbaux
 * @Creation date: 02/12/2021
-* @Date of last modification: 04/12/2021
+* @Date of last modification: 05/12/2021
 *
 ************************************************/
 #include <stdio.h>
