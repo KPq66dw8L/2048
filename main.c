@@ -6,7 +6,6 @@
 * @Date of last modification: 05/12/2021
 *
 ************************************************/
-//Testing
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
