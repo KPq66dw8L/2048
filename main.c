@@ -200,10 +200,10 @@ void startGame (int** matrix) {
 
     initMatrix(matrix);
     first_spot = generateSpot();
-    matrix[3][first_spot] = generateTwoOrFour();
+    matrix[first_spot][first_spot] = generateTwoOrFour();
     do {
         second_spot = generateSpot();
-        matrix[3][second_spot] = generateTwoOrFour();
+        matrix[second_spot][second_spot] = generateTwoOrFour();
     } while (second_spot == first_spot);
     printMatrix(matrix, first_spot, second_spot, 1);
 }
@@ -322,34 +322,30 @@ int cntPairs(int** arr, char rc, int rcNum) //rl means row-column, it indicates 
 * @Return: ---.
 *
 ************************************************/
-void slideAndFusion (int key_value, int** matrix){
+int slideAndFusion (int key_value, int** matrix){
     // g = 0, h = 1, b = 2, d = 3
-    int x = 0, y = 0, buff, nbFusion = 0;
+    int x = 0, y = 0, buff, score = 0;
      
     switch (key_value) {
         case 0: //gauche
             for (x = 0; x < SIZE; x++) {
                 for (y = 1; y < SIZE; y++) {
                     if (matrix[x][y] != 0) { //initiate the shift
-                        
                         for (buff = y; buff > 0; buff--) {
                             //simple shift
-                            printf("\nLigne %d nb de pairs: %d\n", x, cntPairs(matrix, 'r', x));
                             if (matrix[x][buff - 1] == 0) {
                                 matrix[x][buff - 1] = matrix[x][buff];
                                 matrix[x][buff] = 0;
                             }
                             //fusion
-                            else if ( (matrix[x][buff] == matrix[x][buff - 1]) && ( (cntPairs(matrix, 'r', x) == 2 && nbFusion < 3) || (cntPairs(matrix, 'r', x) == 1 && nbFusion <= 1) )){
+                            else if ((matrix[x][buff] == matrix[x][buff - 1]) && (matrix[x][buff] != 0)){
                                 matrix[x][buff - 1] = matrix[x][buff - 1] + matrix[x][buff];
+                                score += matrix[x][buff - 1];
                                 matrix[x][buff] = 0;
-                                nbFusion++;
                             }
-
                         }
                     }
                 }
-                nbFusion = 0;
             }
             
             break;
@@ -362,8 +358,9 @@ void slideAndFusion (int key_value, int** matrix){
                                 matrix[buff - 1][y] = matrix[buff][y];
                                 matrix[buff][y] = 0;
                             }
-                            else if (matrix[buff][y] == matrix[buff - 1][y]){
+                            else if ((matrix[buff][y] == matrix[buff - 1][y]) && (matrix[buff][y] != 0)){
                                 matrix[buff - 1][y] = matrix[buff - 1][y] + matrix[buff][y];
+                                score += matrix[buff - 1][y];
                                 matrix[buff][y] = 0;
                             }
                         }
@@ -380,8 +377,9 @@ void slideAndFusion (int key_value, int** matrix){
                                 matrix[buff + 1][y] = matrix[buff][y];
                                 matrix[buff][y] = 0;
                             }
-                            else if (matrix[buff][y] == matrix[buff + 1][y]){
+                            else if ((matrix[buff][y] == matrix[buff + 1][y]) && (matrix[buff][y] != 0)){
                                 matrix[buff + 1][y] = matrix[buff + 1][y] + matrix[buff][y];
+                                score += matrix[buff + 1][y];
                                 matrix[buff][y] = 0;
                             }
                         }
@@ -398,8 +396,9 @@ void slideAndFusion (int key_value, int** matrix){
                                 matrix[x][buff + 1] = matrix[x][buff];
                                 matrix[x][buff] = 0;
                             }
-                            else if (matrix[x][buff] == matrix[x][buff + 1]){
+                            else if ((matrix[x][buff] == matrix[x][buff + 1]) && (matrix[x][buff] != 0)){
                                 matrix[x][buff + 1] = matrix[x][buff + 1] + matrix[x][buff];
+                                score += matrix[x][buff + 1];
                                 matrix[x][buff] = 0;
                             }
                         }
@@ -416,6 +415,29 @@ void slideAndFusion (int key_value, int** matrix){
     }
     matrix[newX][newY] = generateTwoOrFour();
     printMatrix(matrix, newX, newY, 0);
+    return score;
+}
+/***********************************************
+*
+* @Purpose: Checks if the user has reached 2048.
+* @Parameters: in: Two dimensional array.
+* @Return: Returns 0 if the user hasn't won the game
+           and 1 if 2048 has been reached.
+*
+************************************************/
+int wonGame (int** matrix) {
+    int i = 0, j = 0;
+    int won = 0;
+
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] == 2048) {
+                won = 1;
+                return won;
+            }
+        }
+    }
+    return won;
 }
 /***********************************************
 *
@@ -429,6 +451,7 @@ void slideAndFusion (int key_value, int** matrix){
 int main () {
     int** matrix = NULL;
     int key_value = -1;
+    int score = 0;
 
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
@@ -436,7 +459,9 @@ int main () {
     // Clear everything above in the terminal
     system("cls");
     startGame(matrix);
-    
+    printf(KMAG "Score: %d\n", score);
+    printf(KWHT "\n");
+
     while(start == 1){
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. \nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
@@ -449,9 +474,11 @@ int main () {
             exit(0);
         }
         else {
-            // Each round, clear everything above in the terminal
-            //system("cls");
-            slideAndFusion(key_value, matrix);
+            // Each round, clears everything above in the terminal
+            system("cls");
+            score += slideAndFusion(key_value, matrix);
+            printf(KMAG "Score: %d", score);
+            printf(KWHT "\n");
         }
     }
     return 0;
