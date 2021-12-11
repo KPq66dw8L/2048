@@ -162,7 +162,6 @@ void printMatrix (int** matrix, int newX, int newY, int first) {
                     }
                 }
             }
-            
         }
         printf("\n");
     }
@@ -596,14 +595,14 @@ int main () {
             printf(KWHT "\n");
         }
         if (gameState(matrix) == -1) {
-        printf(KRED "Game Over!\n");
-        freeMemoryIfFailed(matrix, SIZE);
-        freeMemoryIfFailed(tmpMat, SIZE);
-        free(matrix);
-        matrix = NULL;
-        free(tmpMat);
-        tmpMat = NULL;
-        exit(0);
+            printf(KRED "Game Over!\n");
+            freeMemoryIfFailed(matrix, SIZE);
+            freeMemoryIfFailed(tmpMat, SIZE);
+            free(matrix);
+            matrix = NULL;
+            free(tmpMat);
+            tmpMat = NULL;
+            exit(0);
         }
         else {
             if (gameState(matrix) == 1) {
