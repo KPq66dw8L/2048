@@ -223,9 +223,7 @@ int readKeys () {
     int i = 0;
 
     do {
-        while (isspace(c = getchar())) {
-
-        }
+        isspace(c = getchar());        
         for (i = 0; i < DIRECTIONAL_KEYS; i++) {
             if (c == keys[i]) {
                 return i;
@@ -527,7 +525,7 @@ int main () {
     int** matrix = NULL;
     int** tmpMat=NULL;
     int key_value = -1;
-    int score = 0, state=0;
+    int score = 0;
 
     tmpMat = matrixGenerator(tmpMat);
 
@@ -539,7 +537,7 @@ int main () {
     startGame(matrix);
     printf(KMAG "\nScore: %d\n", score);
 
-    while(state = gameState(matrix) != -1 && gameState(matrix) != 1){
+    while(gameState(matrix) != -1 || gameState(matrix) != 1) {
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
         printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
@@ -597,21 +595,28 @@ int main () {
             printf(KMAG "\nScore: %d", score);
             printf(KWHT "\n");
         }
-        
-        
-    }
-    freeMemoryIfFailed(matrix, SIZE);
-    freeMemoryIfFailed(tmpMat, SIZE);
-    free(matrix);
-    matrix = NULL;
-    free(tmpMat);
-    tmpMat = NULL;
-    if(state == -1){
+        if (gameState(matrix) == -1) {
         printf(KRED "Game Over!\n");
+        freeMemoryIfFailed(matrix, SIZE);
+        freeMemoryIfFailed(tmpMat, SIZE);
+        free(matrix);
+        matrix = NULL;
+        free(tmpMat);
+        tmpMat = NULL;
         exit(0);
-    } else{
-        printf(KRED "You won!\n");
-        exit(0);
+        }
+        else {
+            if (gameState(matrix) == 1) {
+                printf(KRED "You won!\n");
+                freeMemoryIfFailed(matrix, SIZE);
+                freeMemoryIfFailed(tmpMat, SIZE);
+                free(matrix);
+                matrix = NULL;
+                free(tmpMat);
+                tmpMat = NULL;
+                exit(0);
+            }
+        }
     }
     return 0;
 }
