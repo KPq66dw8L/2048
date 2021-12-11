@@ -470,11 +470,12 @@ int gameState (int** matrix) {
     return state; // game over
 }
 
-void auxprintMatrix (int** matrix, int rows, int columns) {
+void auxprintMatrix (int** matrix) {
     int i = 0, j = 0;
 
-    for (i = 0; i < rows; i++) {
-        for (j = 0; j < columns; j++) {
+    printf("\n");
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
             printf(KWHT "%d\t", matrix[i][j]);
         }
         printf(KWHT "\n");
@@ -536,11 +537,11 @@ int main () {
     // Clear everything above in the terminal
     system("cls");
     startGame(matrix);
-    printf(KMAG "Score: %d\n", score);
-    printf(KWHT "\n");
+    printf(KMAG "\nScore: %d\n", score);
 
     while(state = gameState(matrix) != -1 && gameState(matrix) != 1){
-        printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. \nAfter the first round, the new number spawning each round will appear in green.\n");
+        printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
+        printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
         key_value = readKeys();
 
@@ -589,10 +590,12 @@ int main () {
             }
             matrix[newX][newY] = generateTwoOrFour();
             printMatrix(matrix, newX, newY, 0);
-            printf(KCYN "\nScore: %d", score);
+            printf(KMAG "\nScore: %d", score);
             printf(KWHT "\n");
         } else {
-            auxprintMatrix(matrix, SIZE, SIZE);
+            auxprintMatrix(matrix);
+            printf(KMAG "\nScore: %d", score);
+            printf(KWHT "\n");
         }
         
         
