@@ -224,6 +224,7 @@ int readKeys () {
 
     do {
         while (isspace(c = getchar())) {
+
         }
         for (i = 0; i < DIRECTIONAL_KEYS; i++) {
             if (c == keys[i]) {
@@ -233,82 +234,6 @@ int readKeys () {
     } while ((c != 'd') || (c != 'g') || (c != 'h') || (c != 'b') || (c != 'q'));
     return -1;
 }
-
-// void swap(int *xp, int *yp)
-// {
-//     int temp = *xp;
-//     *xp = *yp;
-//     *yp = temp;
-// }
- 
-// // A function to implement bubble sort
-// void bubbleSort(int arr[])
-// {
-//    int i, j;
-//    for (i = 0; i < SIZE-1; i++)     
- 
-//        // Last i elements are already in place  
-//        for (j = 0; j < SIZE-i-1; j++)
-//         {
-//             if (arr[j] > arr[j+1])
-//             {
-//                 swap(&arr[j], &arr[j+1]);
-//             }
-//         }
-// }
-
-// int cntPairs(int** arr, char rc, int rcNum) //rl means row-column, it indicates whether we were passed a row or a column
-//     {
-//         // To store the required count
-//         int count = 0, i;
-//         int* arr1D = malloc(SIZE * sizeof(int));
-
-//         if (rc == 'r')
-//         {
-//             for (i = 0; i < SIZE; ++i)
-//             {
-//                 arr1D[i] = arr[rcNum][i];
-//             }
-//         } else 
-//         {
-//             if (rc == 'c')
-//             {
-//                 for (i = 0; i < SIZE; ++i)
-//                 {
-//                     arr1D[i] = arr[i][rcNum];
-//                 }
-//             }
-//         }
-//         // for (int i = 0; i < SIZE; ++i)
-//         // {
-//         //     printf("arr1D[%d] = %d\n", i, arr1D[i]);
-//         // }
- 
-//         // Sort the array
-//         bubbleSort(arr1D);
- 
-//         for (int i = 0; i < SIZE - 1;) {
- 
-//             // A valid pair is found
-//             if (arr1D[i] == arr1D[i + 1] && arr1D[i] != 0) {
-//                 count++;
- 
-//                 // Skip the elements of
-//                 // the current pair
-//                 i = i + 2;
-//             }
- 
-//             // Current elements doesn't make
-//             // a valid pair with any other element
-//             else {
-//                 if (arr1D != 0)
-//                 {
-//                     i++;
-//                 }
-//             }
-//         }
-//         return count;
-//     }
 /***********************************************
 *
 * @Purpose: Slides every cell to the right if
@@ -514,7 +439,12 @@ int gameState (int** matrix) {
                 state = 1;
                 return state;
             }
-            else if(matrix[i][j]== 0){
+            
+        }
+    }
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if(matrix[i][j]== 0){
                 return state; // game's still going
             }
         }
@@ -552,6 +482,39 @@ void auxprintMatrix (int** matrix, int rows, int columns) {
 }
 /***********************************************
 *
+* @Purpose: Compare if two matrices are equal
+* @Parameters: Two matrices 4x4.
+* @Return: Returns 0 if equal or -1 if not equal.
+*
+************************************************/
+int cmpMat(int** mat1, int** mat2){
+    
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if(mat1[i][j] != mat2[i][j]){
+                return -1;
+            }
+        }
+    }
+    return 0;
+}
+/***********************************************
+*
+* @Purpose: Copy a matrix
+* @Parameters: Two matrices 4x4.
+* @Return: 0.
+*
+************************************************/
+void cpyMat(int** mat1, int** mat2){
+    
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            mat2[i][j] = mat1[i][j];
+        }
+    }
+}
+/***********************************************
+*
 * @Purpose: Calls all the functios in order to
             play the game and also reminds the
             user the directional keys.
@@ -561,8 +524,11 @@ void auxprintMatrix (int** matrix, int rows, int columns) {
 ************************************************/
 int main () {
     int** matrix = NULL;
+    int** tmpMat=NULL;
     int key_value = -1;
-    int score = 0;
+    int score = 0, state=0;
+
+    tmpMat = matrixGenerator(tmpMat);
 
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
@@ -573,10 +539,14 @@ int main () {
     printf(KMAG "Score: %d\n", score);
     printf(KWHT "\n");
 
-    while(gameState(matrix) != -1){
+    while(state = gameState(matrix) != -1 && gameState(matrix) != 1){
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. \nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
         key_value = readKeys();
+
+        // to be able to check if we can spawn a new number later
+        cpyMat(matrix, tmpMat);
+
         switch(key_value) {
             case 0:
                 system("cls");
@@ -609,16 +579,34 @@ int main () {
                 break;
 
         }
-        //Spawn new random acceptable value at random spot 
-        int newX = generateSpot(), newY = generateSpot();
-        while (matrix[newX][newY] != 0){
-            newX = generateSpot();
-            newY = generateSpot();
+        // check if we can spawn a new number
+        if(cmpMat(matrix, tmpMat) == -1){
+            //Spawn new random acceptable value at random spot 
+            int newX = generateSpot(), newY = generateSpot();
+            while (matrix[newX][newY] != 0){
+                newX = generateSpot();
+                newY = generateSpot();
+            }
+            matrix[newX][newY] = generateTwoOrFour();
+            printMatrix(matrix, newX, newY, 0);
+            printf(KCYN "\nScore: %d", score);
+            printf(KWHT "\n");
+        } else {
+            auxprintMatrix(matrix, SIZE, SIZE);
         }
-        matrix[newX][newY] = generateTwoOrFour();
-        printMatrix(matrix, newX, newY, 0);
-        printf(KCYN "\nScore: %d", score);
-        printf(KWHT "\n");
+        
+        
+    }
+    freeMemoryIfFailed(matrix, SIZE);
+    freeMemoryIfFailed(tmpMat, SIZE);
+    matrix = NULL;
+    tmpMat = NULL;
+    if(state == -1){
+        printf(KRED "Game Over!\n");
+        exit(0);
+    } else{
+        printf(KRED "You won!\n");
+        exit(0);
     }
     return 0;
 }
