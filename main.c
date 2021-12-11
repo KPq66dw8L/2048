@@ -456,6 +456,7 @@ int gameState (int** matrix) {
             return state; // game's still going
         }
     }
+    state = -1;
     return state; // game over
 }
 /***********************************************
