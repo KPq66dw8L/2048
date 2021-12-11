@@ -3,7 +3,6 @@
 * @Purpose: Create the game 2048.
 * @Author: Axel Expósito Ragaigne && Julien Herbaux
 * @Creation date: 02/12/2021
-* @Date of last modification: 05/12/2021
 *
 ************************************************/
 #include <stdio.h>
@@ -235,81 +234,81 @@ int readKeys () {
     return -1;
 }
 
-void swap(int *xp, int *yp)
-{
-    int temp = *xp;
-    *xp = *yp;
-    *yp = temp;
-}
+// void swap(int *xp, int *yp)
+// {
+//     int temp = *xp;
+//     *xp = *yp;
+//     *yp = temp;
+// }
  
-// A function to implement bubble sort
-void bubbleSort(int arr[])
-{
-   int i, j;
-   for (i = 0; i < SIZE-1; i++)     
+// // A function to implement bubble sort
+// void bubbleSort(int arr[])
+// {
+//    int i, j;
+//    for (i = 0; i < SIZE-1; i++)     
  
-       // Last i elements are already in place  
-       for (j = 0; j < SIZE-i-1; j++)
-        {
-            if (arr[j] > arr[j+1])
-            {
-                swap(&arr[j], &arr[j+1]);
-            }
-        }
-}
+//        // Last i elements are already in place  
+//        for (j = 0; j < SIZE-i-1; j++)
+//         {
+//             if (arr[j] > arr[j+1])
+//             {
+//                 swap(&arr[j], &arr[j+1]);
+//             }
+//         }
+// }
 
-int cntPairs(int** arr, char rc, int rcNum) //rl means row-column, it indicates whether we were passed a row or a column
-    {
-        // To store the required count
-        int count = 0, i;
-        int* arr1D = malloc(SIZE * sizeof(int));
+// int cntPairs(int** arr, char rc, int rcNum) //rl means row-column, it indicates whether we were passed a row or a column
+//     {
+//         // To store the required count
+//         int count = 0, i;
+//         int* arr1D = malloc(SIZE * sizeof(int));
 
-        if (rc == 'r')
-        {
-            for (i = 0; i < SIZE; ++i)
-            {
-                arr1D[i] = arr[rcNum][i];
-            }
-        } else 
-        {
-            if (rc == 'c')
-            {
-                for (i = 0; i < SIZE; ++i)
-                {
-                    arr1D[i] = arr[i][rcNum];
-                }
-            }
-        }
-        // for (int i = 0; i < SIZE; ++i)
-        // {
-        //     printf("arr1D[%d] = %d\n", i, arr1D[i]);
-        // }
+//         if (rc == 'r')
+//         {
+//             for (i = 0; i < SIZE; ++i)
+//             {
+//                 arr1D[i] = arr[rcNum][i];
+//             }
+//         } else 
+//         {
+//             if (rc == 'c')
+//             {
+//                 for (i = 0; i < SIZE; ++i)
+//                 {
+//                     arr1D[i] = arr[i][rcNum];
+//                 }
+//             }
+//         }
+//         // for (int i = 0; i < SIZE; ++i)
+//         // {
+//         //     printf("arr1D[%d] = %d\n", i, arr1D[i]);
+//         // }
  
-        // Sort the array
-        bubbleSort(arr1D);
+//         // Sort the array
+//         bubbleSort(arr1D);
  
-        for (int i = 0; i < SIZE - 1;) {
+//         for (int i = 0; i < SIZE - 1;) {
  
-            // A valid pair is found
-            if (arr1D[i] == arr1D[i + 1] && arr1D[i] != 0) {
-                count++;
+//             // A valid pair is found
+//             if (arr1D[i] == arr1D[i + 1] && arr1D[i] != 0) {
+//                 count++;
  
-                // Skip the elements of
-                // the current pair
-                i = i + 2;
-            }
+//                 // Skip the elements of
+//                 // the current pair
+//                 i = i + 2;
+//             }
  
-            // Current elements doesn't make
-            // a valid pair with any other element
-            else {
-                if (arr1D != 0)
-                {
-                    i++;
-                }
-            }
-        }
-        return count;
-    }
+//             // Current elements doesn't make
+//             // a valid pair with any other element
+//             else {
+//                 if (arr1D != 0)
+//                 {
+//                     i++;
+//                 }
+//             }
+//         }
+//         return count;
+//     }
 /***********************************************
 *
 * @Purpose: Depending of the directional key
@@ -425,19 +424,39 @@ int slideAndFusion (int key_value, int** matrix){
            and 1 if 2048 has been reached.
 *
 ************************************************/
-int wonGame (int** matrix) {
+int gameState (int** matrix) {
     int i = 0, j = 0;
-    int won = 0;
+    int state = 0;
 
     for (i = 0; i < SIZE; i++) {
         for (j = 0; j < SIZE; j++) {
             if (matrix[i][j] == 2048) {
-                won = 1;
-                return won;
+                state = 1;
+                return state;
+            }
+            else if(matrix[i][j]== 0){
+                return state; // game's still going
             }
         }
     }
-    return won;
+    for (i = 0; i < SIZE-1; i++) {
+        for (j = 0; j < SIZE-1; j++) {
+            if(matrix[i][j]== matrix[i + 1][j] || matrix[i][j]== matrix[i][j + 1]){
+                return state; // game's still going
+            }
+        }
+    }
+    for (j = 0; j < SIZE-1; j++) {
+        if(matrix[3][j]== matrix[3][j + 1]){
+            return state; // game's still going
+        }
+    }
+    for (i = 0; i < SIZE-1; i++) {
+        if(matrix[i][3]== matrix[i + 1][3]){
+            return state; // game's still going
+        }
+    }
+    return state; // game over
 }
 /***********************************************
 *
@@ -483,3 +502,4 @@ int main () {
     }
     return 0;
 }
+
