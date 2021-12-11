@@ -148,9 +148,9 @@ void mergeRight (int** matrix) {
 
     for (i = 0; i < SIZE; i++) {
         for (j = SIZE - 1; j > 0; j--) {
-            if (matrix[i][j] && matrix[i][j + 1] == matrix[i][j]) {
-                matrix[i][j] += matrix[i][j + 1];
-                matrix[i][j + 1] = 0;
+            if (matrix[i][j] && matrix[i][j - 1] == matrix[i][j]) {
+                matrix[i][j] += matrix[i][j - 1];
+                matrix[i][j - 1] = 0;
             }
         }
     }
