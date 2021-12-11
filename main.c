@@ -311,109 +311,189 @@ int readKeys () {
 //     }
 /***********************************************
 *
-* @Purpose: Depending of the directional key
-            selected the cells will "slide"
-            in that direction. If two numbers
-            have the same value they can be "fused"
-            when they make contact.
-* @Parameters: in: Numerical value of the key.
-               in: A two dimensional array.
+* @Purpose: Slides every cell to the right if
+            possible.
+* @Parameters: in: A two dimensional array.
 * @Return: ---.
 *
 ************************************************/
-int slideAndFusion (int key_value, int** matrix){
-    // g = 0, h = 1, b = 2, d = 3
-    int x = 0, y = 0, buff, score = 0;
-     
-    switch (key_value) {
-        case 0: //gauche
-            for (x = 0; x < SIZE; x++) {
-                for (y = 1; y < SIZE; y++) {
-                    if (matrix[x][y] != 0) { //initiate the shift
-                        for (buff = y; buff > 0; buff--) {
-                            //simple shift
-                            if (matrix[x][buff - 1] == 0) {
-                                matrix[x][buff - 1] = matrix[x][buff];
-                                matrix[x][buff] = 0;
-                            }
-                            //fusion
-                            else if ((matrix[x][buff] == matrix[x][buff - 1]) && (matrix[x][buff] != 0)){
-                                matrix[x][buff - 1] = matrix[x][buff - 1] + matrix[x][buff];
-                                score += matrix[x][buff - 1];
-                                matrix[x][buff] = 0;
-                            }
-                        }
+void slideRight (int** matrix) {
+    int i = 0, j = 0, buff = 0;
+
+    for (i = 0 ; i < SIZE; i++) {
+        for (j = (SIZE - 2); j >= 0; j--) {
+            if (matrix[i][j] != 0) {
+                for (buff = j; buff < (SIZE - 1); buff++) {
+                    if (matrix[i][buff + 1] == 0) {
+                        matrix[i][buff + 1] = matrix[i][buff];
+                        matrix[i][buff] = 0;
                     }
                 }
             }
-            
-            break;
-        case 1: //haut
-            for (x = 0; x < SIZE; x++) {
-                for (y = 0; y < SIZE; y++) {
-                    if (matrix[x][y] != 0) {
-                        for (buff = x; buff > 0; buff--) {
-                            if (matrix[buff - 1][y] == 0) {
-                                matrix[buff - 1][y] = matrix[buff][y];
-                                matrix[buff][y] = 0;
-                            }
-                            else if ((matrix[buff][y] == matrix[buff - 1][y]) && (matrix[buff][y] != 0)){
-                                matrix[buff - 1][y] = matrix[buff - 1][y] + matrix[buff][y];
-                                score += matrix[buff - 1][y];
-                                matrix[buff][y] = 0;
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-        case 2: //bas
-            for (x = (SIZE - 2); x >= 0; x--) {
-                for (y = 0; y < SIZE; y++) {
-                    if (matrix[x][y] != 0) {
-                        for (buff = x; buff < (SIZE - 1); buff++) {
-                            if (matrix[buff + 1][y] == 0) {
-                                matrix[buff + 1][y] = matrix[buff][y];
-                                matrix[buff][y] = 0;
-                            }
-                            else if ((matrix[buff][y] == matrix[buff + 1][y]) && (matrix[buff][y] != 0)){
-                                matrix[buff + 1][y] = matrix[buff + 1][y] + matrix[buff][y];
-                                score += matrix[buff + 1][y];
-                                matrix[buff][y] = 0;
-                            }
-                        }
-                    }
-                }
-            }
-            break;
-        case 3: //droite
-            for (x = 0; x < SIZE; x++) {
-                for (y = (SIZE - 2); y >= 0; y--) {
-                    if (matrix[x][y] != 0) {
-                        for (buff = y; buff < (SIZE - 1); buff++) {
-                            if (matrix[x][buff + 1] == 0) {
-                                matrix[x][buff + 1] = matrix[x][buff];
-                                matrix[x][buff] = 0;
-                            }
-                            else if ((matrix[x][buff] == matrix[x][buff + 1]) && (matrix[x][buff] != 0)){
-                                matrix[x][buff + 1] = matrix[x][buff + 1] + matrix[x][buff];
-                                score += matrix[x][buff + 1];
-                                matrix[x][buff] = 0;
-                            }
-                        }
-                    }
-                }
-            }
-            break;
+        }
     }
-    //Spawn new random acceptable value at random spot 
-    int newX = generateSpot(), newY = generateSpot();
-    while (matrix[newX][newY] != 0){
-        newX = generateSpot();
-        newY = generateSpot();
+}
+/***********************************************
+*
+* @Purpose: Slides every cell to up if
+            possible.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+void slideUp (int** matrix) {
+    int i = 0, j = 0, buff = 0;
+
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] != 0) {
+                for (buff = i; buff > 0; buff--) {
+                    if (matrix[buff - 1][j] == 0) {
+                        matrix[buff - 1][j] = matrix[buff][j];
+                        matrix[buff][j] = 0;
+                    }
+                }
+            }
+        }
     }
-    matrix[newX][newY] = generateTwoOrFour();
-    printMatrix(matrix, newX, newY, 0);
+}
+/***********************************************
+*
+* @Purpose: Slides every cell to the left if
+            possible.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+void slideLeft (int** matrix) {
+    int i = 0, j = 0, buff = 0;
+
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] != 0) {
+                for (buff = j; buff > 0; buff--) {
+                    if (matrix[i][buff - 1] == 0) {
+                        matrix[i][buff - 1] = matrix[i][buff];
+                        matrix[i][buff] = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+/***********************************************
+*
+* @Purpose: Slides every cell down if
+            possible.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+void slideDown (int** matrix) {
+    int i = 0, j = 0, buff = 0;
+
+    for (i = (SIZE - 2); i >= 0; i--) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] != 0) {
+                for (buff = i; buff < (SIZE - 1); buff++) {
+                    if (matrix[buff + 1][j] == 0) {
+                        matrix[buff + 1][j] = matrix[buff][j];
+                        matrix[buff][j] = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+/***********************************************
+*
+* @Purpose: Merges two cells to the left if they have
+            the same value.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+int mergeLeft (int** matrix) {
+    int i = 0, j = 0;
+    int score = 0;
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] && matrix[i][j - 1] == matrix[i][j]) {
+                matrix[i][j - 1] += matrix[i][j];
+                score += matrix[i][j - 1];
+                matrix[i][j] = 0;
+            }
+        }
+    }
+    return score;
+}
+/***********************************************
+*
+* @Purpose: Merges two cells to the right if they have
+            the same value.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+int mergeRight (int** matrix) {
+    int i = 0, j = 0;
+    int score = 0;
+
+    for (i = 0; i < SIZE; i++) {
+        for (j = SIZE - 1; j > 0; j--) {
+            if (matrix[i][j] && matrix[i][j + 1] == matrix[i][j]) {
+                matrix[i][j] += matrix[i][j + 1];
+                score += matrix[i][j];
+                matrix[i][j + 1] = 0;
+            }
+        }
+    }
+    return score;
+}
+/***********************************************
+*
+* @Purpose: Merges two cells upwards if they have
+            the same value.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+int mergeUp (int** matrix) {
+    int i = 0, j = 0;
+    int score = 0;
+
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] && matrix[i + 1][j] == matrix[i][j]) {
+                matrix[i][j] += matrix[i + 1][j];
+                score += matrix[i][j];
+                matrix[i + 1][j] = 0;
+            }
+        }
+    }
+    return score;
+}
+/***********************************************
+*
+* @Purpose: Merges two cells downwards if they have
+            the same value.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
+int mergeDown (int** matrix) {
+    int i = 0, j = 0;
+    int score = 0;
+
+    for (i = SIZE - 1; i > 0; i--) {
+        for (j = 0; j < SIZE; j++) {
+            if (matrix[i][j] && matrix[i - 1][j] == matrix[i][j]) {
+                matrix[i - 1][j] += matrix[i][j];
+                score += matrix[i - 1][j];
+                matrix[i][j] = 0;
+            }
+        }
+    }
     return score;
 }
 /***********************************************
@@ -441,23 +521,34 @@ int gameState (int** matrix) {
     }
     for (i = 0; i < SIZE-1; i++) {
         for (j = 0; j < SIZE-1; j++) {
-            if(matrix[i][j]== matrix[i + 1][j] || matrix[i][j]== matrix[i][j + 1]){
+            if(matrix[i][j]== matrix[i + 1][j] || matrix[i][j] == matrix[i][j + 1]){
                 return state; // game's still going
             }
         }
     }
     for (j = 0; j < SIZE-1; j++) {
-        if(matrix[3][j]== matrix[3][j + 1]){
+        if(matrix[3][j] == matrix[3][j + 1]){
             return state; // game's still going
         }
     }
     for (i = 0; i < SIZE-1; i++) {
-        if(matrix[i][3]== matrix[i + 1][3]){
+        if(matrix[i][3] == matrix[i + 1][3]){
             return state; // game's still going
         }
     }
     state = -1;
     return state; // game over
+}
+
+void auxprintMatrix (int** matrix, int rows, int columns) {
+    int i = 0, j = 0;
+
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < columns; j++) {
+            printf(KWHT "%d\t", matrix[i][j]);
+        }
+        printf(KWHT "\n");
+    }
 }
 /***********************************************
 *
@@ -482,24 +573,52 @@ int main () {
     printf(KMAG "Score: %d\n", score);
     printf(KWHT "\n");
 
-    while(start == 1){
+    while(gameState(matrix) != -1){
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. \nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
         key_value = readKeys();
-        if (key_value == 4) {
-            printf(KRED "Goodbye !\n");
-            // "\n" in white so that the user's prompt appear in white(only for the first prompt afterwards),
-            //which is the Windows terminal default prompt color 
-            printf(KWHT "\n");
-            exit(0);
+        switch(key_value) {
+            case 0:
+                system("cls");
+                slideLeft(matrix);
+                score += mergeLeft(matrix);
+                slideLeft(matrix);
+                break;
+            case 1:
+                system("cls");
+                slideUp(matrix);
+                score += mergeUp(matrix);
+                slideUp(matrix);
+                break;
+            case 2:
+                system("cls");
+                slideDown(matrix);
+                score += mergeDown(matrix);
+                slideDown(matrix);
+                break;
+            case 3:
+                system("cls");
+                slideRight(matrix);
+                score += mergeRight(matrix);
+                slideRight(matrix);
+                break;
+            case 4:
+                printf(KRED "Goodbye!\n");
+                printf(KWHT "\n");
+                exit(0);
+                break;
+
         }
-        else {
-            // Each round, clears everything above in the terminal
-            system("cls");
-            score += slideAndFusion(key_value, matrix);
-            printf(KMAG "Score: %d", score);
-            printf(KWHT "\n");
+        //Spawn new random acceptable value at random spot 
+        int newX = generateSpot(), newY = generateSpot();
+        while (matrix[newX][newY] != 0){
+            newX = generateSpot();
+            newY = generateSpot();
         }
+        matrix[newX][newY] = generateTwoOrFour();
+        printMatrix(matrix, newX, newY, 0);
+        printf(KCYN "\nScore: %d", score);
+        printf(KWHT "\n");
     }
     return 0;
 }
