@@ -599,7 +599,9 @@ int main () {
     }
     freeMemoryIfFailed(matrix, SIZE);
     freeMemoryIfFailed(tmpMat, SIZE);
+    free(matrix);
     matrix = NULL;
+    free(tmpMat);
     tmpMat = NULL;
     if(state == -1){
         printf(KRED "Game Over!\n");
