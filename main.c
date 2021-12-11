@@ -469,17 +469,6 @@ int gameState (int** matrix) {
     state = -1;
     return state; // game over
 }
-
-void auxprintMatrix (int** matrix, int rows, int columns) {
-    int i = 0, j = 0;
-
-    for (i = 0; i < rows; i++) {
-        for (j = 0; j < columns; j++) {
-            printf(KWHT "%d\t", matrix[i][j]);
-        }
-        printf(KWHT "\n");
-    }
-}
 /***********************************************
 *
 * @Purpose: Compare if two matrices are equal
