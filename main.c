@@ -500,7 +500,7 @@ int cmpMat(int** mat1, int** mat2){
 }
 /***********************************************
 *
-* @Purpose: Copy a matrix
+* @Purpose: Copy a matrix mat1 to mat2
 * @Parameters: Two matrices 4x4.
 * @Return: 0.
 *
