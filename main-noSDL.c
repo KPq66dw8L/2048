@@ -26,7 +26,6 @@ int main () {
 
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
-    int start = 1;
     // Clear everything above in the terminal
     system("cls");
     startGame(matrix);
