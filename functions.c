@@ -387,9 +387,9 @@ int mergeDown (int** matrix) {
     for (i = SIZE - 1; i > 0; i--) {
         for (j = 0; j < SIZE; j++) {
             if (matrix[i][j] && matrix[i - 1][j] == matrix[i][j]) {
-                matrix[i - 1][j] += matrix[i][j];
-                score += matrix[i - 1][j];
-                matrix[i][j] = 0;
+                matrix[i][j] += matrix[i - 1][j];
+                score += matrix[i][j];
+                matrix[i - 1][j] = 0;
             }
         }
     }

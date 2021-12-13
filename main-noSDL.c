@@ -38,25 +38,25 @@ int main () {
         cpyMat(matrix, tmpMat);
         switch(key_value) {
             case 0:
-                //system("cls");
+                system("cls");
                 slideLeft(matrix);
                 score += mergeLeft(matrix);
                 slideLeft(matrix);
                 break;
             case 1:
-                //system("cls");
+                system("cls");
                 slideUp(matrix);
                 score += mergeUp(matrix);
                 slideUp(matrix);
                 break;
             case 2:
-                //system("cls");
+                system("cls");
                 slideDown(matrix);
                 score += mergeDown(matrix);
                 slideDown(matrix);
                 break;
             case 3:
-                //system("cls");
+                system("cls");
                 slideRight(matrix);
                 score += mergeRight(matrix);
                 slideRight(matrix);
