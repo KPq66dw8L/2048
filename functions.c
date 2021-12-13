@@ -418,24 +418,24 @@ int gameState (int** matrix) {
     }
     for (i = 0; i < SIZE; i++) {
         for (j = 0; j < SIZE; j++) {
-            if(matrix[i][j]== 0){
+            if(matrix[i][j] == 0){
                 return state; // game's still going
             }
         }
     }
-    for (i = 0; i < SIZE-1; i++) {
-        for (j = 0; j < SIZE-1; j++) {
-            if(matrix[i][j]== matrix[i + 1][j] || matrix[i][j] == matrix[i][j + 1]){
+    for (i = 0; i < SIZE - 1; i++) {
+        for (j = 0; j < SIZE - 1; j++) {
+            if(matrix[i][j] == matrix[i + 1][j] || matrix[i][j] == matrix[i][j + 1]){
                 return state; // game's still going
             }
         }
     }
-    for (j = 0; j < SIZE-1; j++) {
+    for (j = 0; j < SIZE - 1; j++) {
         if(matrix[3][j] == matrix[3][j + 1]){
             return state; // game's still going
         }
     }
-    for (i = 0; i < SIZE-1; i++) {
+    for (i = 0; i < SIZE - 1; i++) {
         if(matrix[i][3] == matrix[i + 1][3]){
             return state; // game's still going
         }

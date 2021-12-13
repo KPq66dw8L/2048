@@ -23,44 +23,40 @@ int main () {
     int score = 0;
 
     tmpMat = matrixGenerator(tmpMat);
-
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
     // Clear everything above in the terminal
     system("cls");
     startGame(matrix);
     printf(KMAG "\nScore: %d\n", score);
-
     while(gameState(matrix) != -1 || gameState(matrix) != 1) {
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
         printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
         printf("Press Q to QUIT.\n");
         key_value = readKeys();
-
         // to be able to check if we can spawn a new number later
         cpyMat(matrix, tmpMat);
-
         switch(key_value) {
             case 0:
-                system("cls");
+                //system("cls");
                 slideLeft(matrix);
                 score += mergeLeft(matrix);
                 slideLeft(matrix);
                 break;
             case 1:
-                system("cls");
+                //system("cls");
                 slideUp(matrix);
                 score += mergeUp(matrix);
                 slideUp(matrix);
                 break;
             case 2:
-                system("cls");
+                //system("cls");
                 slideDown(matrix);
                 score += mergeDown(matrix);
                 slideDown(matrix);
                 break;
             case 3:
-                system("cls");
+                //system("cls");
                 slideRight(matrix);
                 score += mergeRight(matrix);
                 slideRight(matrix);
@@ -70,7 +66,6 @@ int main () {
                 printf(KWHT "\n");
                 exit(0);
                 break;
-
         }
         // check if we can spawn a new number
         if(cmpMat(matrix, tmpMat) == -1){
@@ -114,4 +109,3 @@ int main () {
     }
     return 0;
 }
-
