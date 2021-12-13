@@ -443,7 +443,14 @@ int gameState (int** matrix) {
     state = -1;
     return state; // game over
 }
-
+/***********************************************
+*
+* @Purpose: Prints the matrix, it's an auxilary
+            function.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
 void auxprintMatrix (int** matrix) {
     int i = 0, j = 0;
 

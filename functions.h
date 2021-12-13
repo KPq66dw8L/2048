@@ -198,6 +198,14 @@ int mergeDown (int** matrix);
 ************************************************/
 int gameState (int** matrix);
 
+/***********************************************
+*
+* @Purpose: Prints the matrix, it's an auxilary
+            function.
+* @Parameters: in: A two dimensional array.
+* @Return: ---.
+*
+************************************************/
 void auxprintMatrix (int** matrix);
 
 /***********************************************
