@@ -158,10 +158,10 @@ void mergeRight (int** matrix) {
 
 void mergeUp (int** matrix) {
     int i = 0, j = 0;
-
+    
     for (i = 0; i < SIZE; i++) {
         for (j = 0; j < SIZE; j++) {
-            if (matrix[i][j] && matrix[i + 1][j] == matrix[i][j]) {
+            if (matrix[i][j] && matrix[i + 1][j] != matrix[i][j]) {
                 matrix[i][j] += matrix[i + 1][j];
                 matrix[i + 1][j] = 0;
             }
@@ -188,10 +188,10 @@ int main () {
 
     matrix = matrixGenerator(matrix);
     initMatrix(matrix);
-    matrix[0][0] = 4;
-    matrix[1][0] = 2;
-    matrix[2][0] = 2;
-    matrix[3][0] = 4;
+    matrix[1][0] = 4;
+    matrix[1][1] = 2;
+    matrix[1][2] = 4;
+    matrix[1][3] = 4;
     printMatrix(matrix, SIZE, SIZE);
     key = readKeys();
     switch (key) {
@@ -219,7 +219,7 @@ int main () {
             slideRight(matrix);
            
                 mergeRight(matrix);
-                //slideRight(matrix);
+                slideRight(matrix);
             
             break;
     }
