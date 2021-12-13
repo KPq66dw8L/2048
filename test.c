@@ -175,8 +175,8 @@ void mergeDown (int** matrix) {
     for (i = SIZE - 1; i > 0; i--) {
         for (j = 0; j < SIZE; j++) {
             if (matrix[i][j] && matrix[i - 1][j] == matrix[i][j]) {
-                matrix[i - 1][j] += matrix[i][j];
-                matrix[i][j] = 0;
+                matrix[i][j] += matrix[i - 1][j];
+                matrix[i - 1][j] = 0;
             }
         }
     }
@@ -188,10 +188,10 @@ int main () {
 
     matrix = matrixGenerator(matrix);
     initMatrix(matrix);
-    matrix[1][3] = 4;
-    matrix[1][2] = 2;
-    matrix[1][1] = 2;
+    matrix[0][0] = 4;
     matrix[1][0] = 2;
+    matrix[2][0] = 2;
+    matrix[3][0] = 4;
     printMatrix(matrix, SIZE, SIZE);
     key = readKeys();
     switch (key) {
