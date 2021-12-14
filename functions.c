@@ -680,6 +680,7 @@ void loadGame (int** matrix, int** tmpMat) {
     FILE* file1;
     FILE* file2;
 
+    clearTerm();
     file1 = fopen("savedgame", "r");
     if (NULL != file1) {
         score = readFromFile(matrix, file1);
