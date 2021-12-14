@@ -384,7 +384,7 @@ int mergeUp (int** matrix) {
     int i = 0, j = 0;
     int score = 0;
 
-    for (i = 0; i < SIZE; i++) {
+    for (i = 0; i < SIZE-1; i++) {
         for (j = 0; j < SIZE; j++) {
             if (matrix[i][j] && matrix[i + 1][j] == matrix[i][j]) {
                 matrix[i][j] += matrix[i + 1][j];
