@@ -5,6 +5,11 @@
 #define SIZE 4
 #define DIRECTIONAL_KEYS 5
 
+typedef struct {
+    int** matrix;
+    int score;
+} Game;
+
 void slideRight (int** matrix) {
     int i = 0, j = 0, buff = 0;
 
@@ -99,7 +104,6 @@ void printMatrix (int** matrix, int rows, int columns) {
         }
         printf("\n");
     }
-
 }
 
 int** matrixGenerator (int** matrix) {
@@ -159,7 +163,7 @@ void mergeRight (int** matrix) {
 void mergeUp (int** matrix) {
     int i = 0, j = 0;
     
-    for (i = 0; i < SIZE; i++) {
+    for (i = 0; i < SIZE - 1; i++) {
         for (j = 0; j < SIZE; j++) {
             if (matrix[i][j] && matrix[i + 1][j] != matrix[i][j]) {
                 matrix[i][j] += matrix[i + 1][j];
@@ -183,47 +187,48 @@ void mergeDown (int** matrix) {
 }
 
 int main () {
-    int** matrix;
+    Game game;
     int key = -1;
+    FILE* my_file;
 
-    matrix = matrixGenerator(matrix);
-    initMatrix(matrix);
-    matrix[1][0] = 4;
-    matrix[1][1] = 2;
-    matrix[1][2] = 4;
-    matrix[1][3] = 4;
-    printMatrix(matrix, SIZE, SIZE);
+    game.matrix = matrixGenerator(game.matrix);
+    initMatrix(game.matrix);
+    game.matrix[1][0] = 4;
+    game.matrix[1][1] = 2;
+    game.matrix[1][2] = 4;
+    game.matrix[1][3] = 4;
+    printMatrix(game.matrix, SIZE, SIZE);
     key = readKeys();
     switch (key) {
         case 0:
-            slideLeft(matrix);
+            slideLeft(game.matrix);
             
-                mergeLeft(matrix);
-                slideLeft(matrix);
+                mergeLeft(game.matrix);
+                slideLeft(game.matrix);
             
             break;
         case 1:
-            slideUp(matrix);
-                mergeUp(matrix);
-                slideUp(matrix);
+            slideUp(game.matrix);
+                mergeUp(game.matrix);
+                slideUp(game.matrix);
         
             break;
 
         case 2:
-            slideDown(matrix);
-            mergeDown(matrix);
-            slideDown(matrix);
+            slideDown(game.matrix);
+            mergeDown(game.matrix);
+            slideDown(game.matrix);
             break;
         
         case 3:
-            slideRight(matrix);
+            slideRight(game.matrix);
            
-                mergeRight(matrix);
-                slideRight(matrix);
+                mergeRight(game.matrix);
+                slideRight(game.matrix);
             
             break;
     }
 
-    printMatrix(matrix, SIZE, SIZE);
+    printMatrix(game.matrix, SIZE, SIZE);
     return 0;
 }
