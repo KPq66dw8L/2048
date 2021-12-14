@@ -18,8 +18,6 @@
 int main () {
     int** matrix = NULL;
     int** tmpMat=NULL;
-    int key_value = -1;
-    int score = 0;
     int new_game = 0;
     char aux;
 
