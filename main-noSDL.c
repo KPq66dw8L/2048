@@ -6,7 +6,6 @@
 *
 ************************************************/
 #include "functions.h"
-
 /***********************************************
 *
 * @Purpose: Calls all the functios in order to
@@ -26,9 +25,16 @@ int main () {
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
     // Clear everything above in the terminal
-    system("cls");
+    clearTerm();
+    // Scoreboard
+    newScore(38);
+    printScoreboard();
+    exit(0);
+    // Create and print initial matrix
     startGame(matrix);
+    // Current score
     printf(KMAG "\nScore: %d\n", score);
+
     while(gameState(matrix) != -1 || gameState(matrix) != 1) {
         printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
         printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
@@ -38,25 +44,25 @@ int main () {
         cpyMat(matrix, tmpMat);
         switch(key_value) {
             case 0:
-                system("cls");
+                clearTerm();
                 slideLeft(matrix);
                 score += mergeLeft(matrix);
                 slideLeft(matrix);
                 break;
             case 1:
-                system("cls");
+                clearTerm();
                 slideUp(matrix);
                 score += mergeUp(matrix);
                 slideUp(matrix);
                 break;
             case 2:
-                system("cls");
+                clearTerm();
                 slideDown(matrix);
                 score += mergeDown(matrix);
                 slideDown(matrix);
                 break;
             case 3:
-                system("cls");
+                clearTerm();
                 slideRight(matrix);
                 score += mergeRight(matrix);
                 slideRight(matrix);
@@ -92,6 +98,10 @@ int main () {
             matrix = NULL;
             free(tmpMat);
             tmpMat = NULL;
+
+            newScore(score);
+            printScoreboard();
+            printf(KWHT "\n");
             exit(0);
         }
         else {
@@ -103,9 +113,14 @@ int main () {
                 matrix = NULL;
                 free(tmpMat);
                 tmpMat = NULL;
+
+                newScore(score);
+                printScoreboard();
+                printf(KWHT "\n");
                 exit(0);
             }
         }
     }
+    
     return 0;
 }

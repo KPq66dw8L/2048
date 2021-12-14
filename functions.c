@@ -79,6 +79,88 @@ void initMatrix (int** matrix) {
 }
 /***********************************************
 *
+* @Purpose: Clear the above content in the terminal, in a different way whether compiled on unix or windows.
+* @Parameters: in: ---.
+* @Return: ---.
+*
+************************************************/
+void clearTerm(){
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #endif 
+    #ifdef __unix__
+        system("clear");
+    #endif 
+}
+/***********************************************
+*
+* @Purpose: Print the scoreboard stored in a file.
+* @Parameters: in: ---.
+* @Return: 0 if scoreboard file exists, else -1.
+*
+************************************************/
+void printScoreboard(){
+    int nbPeople=1, count=0;
+    char ch, next;
+    char buffer[50];
+    char tmp[50];
+    FILE *scoreboard;
+    scoreboard = fopen("scoreboard.txt", "r+");
+    printf("        SCOREBOARD    \n");
+    fseek( scoreboard, 0, SEEK_SET );
+    while ((ch = fgetc(scoreboard)) != EOF)
+    {
+        if(ch == ':'){
+            for (int i = 1; i < 50; i++) {
+                tmp[i] = buffer[i];
+            }
+            printf("%d. %s", nbPeople, tmp);
+            
+            // empty buffer to store the score in it next
+            memset(buffer, '\0', sizeof(buffer));
+            count = 0;
+        }
+        if(ch == ';'){
+            printf("%s\n", buffer);
+            nbPeople++;
+            // empty buffer to store the username in it next
+            memset(buffer, '\0', sizeof(buffer));
+            count = 0;
+        }
+        buffer[count] = ch;
+        count++;
+        
+    }
+    fclose(scoreboard);
+}
+/***********************************************
+*
+* @Purpose: Ask the user whether or not he wants to save his score, if so, ask for username and write in scoreboard file.
+* @Parameters: in: score as an integer.
+* @Return: ---.
+*
+************************************************/
+void newScore(int score){
+    char c;
+    printf("Do you want to save your score? (y/n)\n");
+    scanf(" %c", &c);
+    if(c == 'y'){
+        char username[50];
+        printf("Enter a username: ");
+        //fgets(username, 49, stdin); //reading maximum 49 char on stdin (standard)
+        scanf("%s", username);
+
+        printf("\n");
+        FILE *scoreboard;
+        scoreboard = fopen("scoreboard.txt", "a+"); // changer en a
+        fprintf(scoreboard,"%s:%d;", username, score);
+        fclose(scoreboard);
+    } else {
+        printf("failed\n");
+    }
+}
+/***********************************************
+*
 * @Purpose: Print a two dimensional array.
 * @Parameters: in: A two dimensional array.
 * @Return: ---.

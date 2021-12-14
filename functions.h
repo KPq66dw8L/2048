@@ -225,5 +225,13 @@ int cmpMat(int** mat1, int** mat2);
 *
 ************************************************/
 void cpyMat(int** mat1, int** mat2);
+/***********************************************
+*
+* @Purpose: Clear the above content in the terminal, in a different way whether compiled on unix or windows.
+* @Parameters: in: ---.
+* @Return: ---.
+*
+************************************************/
+void clearTerm();
 
 #endif
