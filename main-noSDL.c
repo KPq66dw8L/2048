@@ -20,99 +20,39 @@ int main () {
     int** tmpMat=NULL;
     int key_value = -1;
     int score = 0;
+    int new_game = 0;
+    char aux;
 
     tmpMat = matrixGenerator(tmpMat);
     srand(time(NULL));
     matrix = matrixGenerator(matrix);
     // Clear everything above in the terminal
     clearTerm();
-    // Create and print initial matrix
-    startGame(matrix);
-    // Current score
-    printf(KMAG "\nScore: %d\n", score);
-
-    while(gameState(matrix) != -1 || gameState(matrix) != 1) {
-        printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
-        printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
-        printf("Press Q to QUIT.\n");
-        key_value = readKeys();
-        // to be able to check if we can spawn a new number later
-        cpyMat(matrix, tmpMat);
-        switch(key_value) {
-            case 0:
-                clearTerm();
-                slideLeft(matrix);
-                score += mergeLeft(matrix);
-                slideLeft(matrix);
-                break;
-            case 1:
-                clearTerm();
-                slideUp(matrix);
-                score += mergeUp(matrix);
-                slideUp(matrix);
-                break;
-            case 2:
-                clearTerm();
-                slideDown(matrix);
-                score += mergeDown(matrix);
-                slideDown(matrix);
-                break;
-            case 3:
-                clearTerm();
-                slideRight(matrix);
-                score += mergeRight(matrix);
-                slideRight(matrix);
-                break;
-            case 4:
-                printf(KRED "Goodbye!\n");
-                printf(KWHT "\n");
-                exit(0);
-                break;
+    //Ask the user which action wants to perform until a valid input is entered.
+    do {
+        printf("1. Start a new game | 2. Load a previous game | 3. Exit.");
+        printf("\nSelect an option from above: ");
+        scanf("%d%c", &new_game, &aux);
+        if (new_game <= 0 || new_game > 3) {
+            printf("ERROR. Please enter a valid number.\n");
         }
-        // check if we can spawn a new number
-        if(cmpMat(matrix, tmpMat) == -1){
-            //Spawn new random acceptable value at random spot 
-            int newX = generateSpot(), newY = generateSpot();
-            while (matrix[newX][newY] != 0){
-                newX = generateSpot();
-                newY = generateSpot();
-            }
-            matrix[newX][newY] = generateTwoOrFour();
-            printMatrix(matrix, newX, newY, 0);
-            printf(KMAG "\nScore: %d", score);
-            printf(KWHT "\n");
-        } else {
-            auxprintMatrix(matrix);
-            printf(KMAG "\nScore: %d", score);
-            printf(KWHT "\n");
-        }
-        if (gameState(matrix) == -1) {
-            printf(KRED "Game Over!\n");
-            freeMemoryIfFailed(matrix, SIZE);
-            freeMemoryIfFailed(tmpMat, SIZE);
-            free(matrix);
-            matrix = NULL;
-            free(tmpMat);
-            tmpMat = NULL;
-
+    } while (new_game <= 0 || new_game > 3);
+    //Do an action depending on the input of the user.
+    switch (new_game) {
+        //Start a new game.
+        case 1:
+            newGame(matrix, tmpMat);
+            break;
+        //Load a previous game.
+        case 2:
+            loadGame(matrix, tmpMat);
+            break;
+        //Exit the program.
+        case 3:
+            printf(KRED "Goodbye!\n");
             printf(KWHT "\n");
             exit(0);
-        }
-        else {
-            if (gameState(matrix) == 1) {
-                printf(KRED "You won!\n");
-                freeMemoryIfFailed(matrix, SIZE);
-                freeMemoryIfFailed(tmpMat, SIZE);
-                free(matrix);
-                matrix = NULL;
-                free(tmpMat);
-                tmpMat = NULL;
-
-                printf(KWHT "\n");
-                exit(0);
-            }
-        }
+            break;
     }
-    
     return 0;
 }

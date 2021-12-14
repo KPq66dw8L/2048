@@ -225,6 +225,7 @@ int cmpMat(int** mat1, int** mat2);
 *
 ************************************************/
 void cpyMat(int** mat1, int** mat2);
+
 /***********************************************
 *
 * @Purpose: Clear the above content in the terminal, in a different way whether compiled on unix or windows.
@@ -233,5 +234,46 @@ void cpyMat(int** mat1, int** mat2);
 *
 ************************************************/
 void clearTerm();
+
+/***********************************************
+*
+* @Purpose: Print the score and the game into a file.
+* @Parameters: in: A two dimensional array.
+               in: A file.
+               in: The score.
+* @Return: ---.
+*
+************************************************/
+void printInFile (int** matrix, FILE* file, int score);
+
+/***********************************************
+*
+* @Purpose: Read from a file.
+* @Parameters: in: A two dimensional array.
+               in: A file.
+* @Return: The score.
+*
+************************************************/
+int readFromFile (int** matrix, FILE* file);
+
+/***********************************************
+*
+* @Purpose: Start a new game.
+* @Parameters: in: A two dimensional array.
+               in: A two dimensional array.
+* @Return: The score.
+*
+************************************************/
+void newGame (int** matrix, int** tmpMat);
+
+/***********************************************
+*
+* @Purpose: Load a previous game.
+* @Parameters: in: A two dimensional array.
+               in: A two dimensional array.
+* @Return: The score.
+*
+************************************************/
+void loadGame (int** matrix, int** tmpMat);
 
 #endif

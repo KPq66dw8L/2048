@@ -512,3 +512,266 @@ void cpyMat(int** mat1, int** mat2) {
         }
     }
 }
+/***********************************************
+*
+* @Purpose: Print the score and the game into a file.
+* @Parameters: in: A two dimensional array.
+               in: A file.
+               in: The score.
+* @Return: ---.
+*
+************************************************/
+void printInFile (int** matrix, FILE* file, int score) {
+    int i = 0, j = 0;
+
+    //Print score in file
+    fprintf(file, "%d\n", score);
+    //Print matrix in file
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            fprintf(file, "%d\t", matrix[i][j]);
+        }
+        if (i != SIZE - 1) {
+            fprintf(file, "\n");
+        }
+    }
+}
+/***********************************************
+*
+* @Purpose: Read from a file.
+* @Parameters: in: A two dimensional array.
+               in: A file.
+* @Return: The score.
+*
+************************************************/
+int readFromFile (int** matrix, FILE* file) {
+    int score = 0;
+    int i = 0, j = 0;
+
+    //Scan the score since it will be the first element of the file
+    fscanf(file, "%d\n", &score);
+    //Scan the matrix
+    while (!feof(file)) {
+        for (i = 0; i < SIZE; i++) {
+            for (j = 0; j < SIZE; j++) {
+                fscanf(file, "%d\t", &matrix[i][j]);
+            }
+        }
+    }
+    return score;
+}
+/***********************************************
+*
+* @Purpose: Start a new game.
+* @Parameters: in: A two dimensional array.
+               in: A two dimensional array.
+* @Return: The score.
+*
+************************************************/
+void newGame (int** matrix, int** tmpMat) {
+    int key_value = -1;
+    int score = 0;
+    FILE* my_file;
+
+    clearTerm();
+    // Create and print initial matrix
+    startGame(matrix);
+    // Current score
+    printf(KMAG "\nScore: %d\n", score);
+    while(gameState(matrix) != -1 || gameState(matrix) != 1) {
+        printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
+        printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
+        printf("Press Q to QUIT.\n");
+        key_value = readKeys();
+        // to be able to check if we can spawn a new number later
+        cpyMat(matrix, tmpMat);
+        switch(key_value) {
+            case 0:
+                clearTerm();
+                slideLeft(matrix);
+                score += mergeLeft(matrix);
+                slideLeft(matrix);
+                break;
+            case 1:
+                clearTerm();
+                slideUp(matrix);
+                score += mergeUp(matrix);
+                slideUp(matrix);
+                break;
+            case 2:
+                clearTerm();
+                slideDown(matrix);
+                score += mergeDown(matrix);
+                slideDown(matrix);
+                break;
+            case 3:
+                clearTerm();
+                slideRight(matrix);
+                score += mergeRight(matrix);
+                slideRight(matrix);
+                break;
+            case 4:
+                //Save the game only when the user exits the game.
+                my_file = fopen("savedgame", "w");
+                if (NULL != my_file) {
+                    printInFile(matrix, my_file, score);
+                    fclose(my_file);
+                }
+                printf(KRED "Goodbye!\n");
+                printf(KWHT "\n");
+                exit(0);
+                break;
+        }
+        // check if we can spawn a new number
+        if(cmpMat(matrix, tmpMat) == -1){
+            //Spawn new random acceptable value at random spot 
+            int newX = generateSpot(), newY = generateSpot();
+            while (matrix[newX][newY] != 0){
+                newX = generateSpot();
+                newY = generateSpot();
+            }
+            matrix[newX][newY] = generateTwoOrFour();
+            printMatrix(matrix, newX, newY, 0);
+            printf(KMAG "\nScore: %d", score);
+            printf(KWHT "\n");
+        } 
+        else {
+            auxprintMatrix(matrix);
+            printf(KMAG "\nScore: %d", score);
+            printf(KWHT "\n");
+        }
+        if (gameState(matrix) == -1) {
+            printf(KRED "Game Over!\n");
+            freeMemoryIfFailed(matrix, SIZE);
+            freeMemoryIfFailed(tmpMat, SIZE);
+            free(matrix);
+            matrix = NULL;
+            free(tmpMat);
+            tmpMat = NULL;
+            printf(KWHT "\n");
+            exit(0);
+        }
+        else {
+            if (gameState(matrix) == 1) {
+                printf(KRED "You won!\n");
+                freeMemoryIfFailed(matrix, SIZE);
+                freeMemoryIfFailed(tmpMat, SIZE);
+                free(matrix);
+                matrix = NULL;
+                free(tmpMat);
+                tmpMat = NULL;
+                printf(KWHT "\n");
+                exit(0);
+            }
+        }
+    }
+}
+/***********************************************
+*
+* @Purpose: Load a previous game.
+* @Parameters: in: A two dimensional array.
+               in: A two dimensional array.
+* @Return: The score.
+*
+************************************************/
+void loadGame (int** matrix, int** tmpMat) {
+    int score = 0;
+    int key_value = -1;
+    FILE* file1;
+    FILE* file2;
+
+    file1 = fopen("savedgame", "r");
+    if (NULL != file1) {
+        score = readFromFile(matrix, file1);
+        auxprintMatrix(matrix);
+        printf(KMAG "\nScore: %d\n", score);
+        while(gameState(matrix) != -1 || gameState(matrix) != 1) {
+            printf(KBLU "\nDIRECTIONAL KEYS: D = RIGHT, G = LEFT, H = UP, B = DOWN. Press ENTER once you enter the desired key.");
+            printf("\nAfter the first round, the new number spawning each round will appear in green.\n");
+            printf("Press Q to QUIT.\n");
+            key_value = readKeys();
+            // to be able to check if we can spawn a new number later
+            cpyMat(matrix, tmpMat);
+            switch(key_value) {
+                case 0:
+                    clearTerm();
+                    slideLeft(matrix);
+                    score += mergeLeft(matrix);
+                    slideLeft(matrix);
+                    break;
+                case 1:
+                    clearTerm();
+                    slideUp(matrix);
+                    score += mergeUp(matrix);
+                    slideUp(matrix);
+                    break;
+                case 2:
+                    clearTerm();
+                    slideDown(matrix);
+                    score += mergeDown(matrix);
+                    slideDown(matrix);
+                    break;
+                case 3:
+                    clearTerm();
+                    slideRight(matrix);
+                    score += mergeRight(matrix);
+                    slideRight(matrix);
+                    break;
+                case 4:
+                    //Save the game only when the user exits the game.
+                    file2 = fopen("savedgame", "w");
+                    if (NULL != file2) {
+                        printInFile(matrix, file2, score);
+                        fclose(file2);
+                    }
+                    printf(KRED "Goodbye!\n");
+                    printf(KWHT "\n");
+                    exit(0);
+                    break;
+            }
+            // check if we can spawn a new number
+            if(cmpMat(matrix, tmpMat) == -1){
+                //Spawn new random acceptable value at random spot 
+                int newX = generateSpot(), newY = generateSpot();
+                while (matrix[newX][newY] != 0){
+                    newX = generateSpot();
+                    newY = generateSpot();
+                }
+                matrix[newX][newY] = generateTwoOrFour();
+                printMatrix(matrix, newX, newY, 0);
+                printf(KMAG "\nScore: %d", score);
+                printf(KWHT "\n");
+            } 
+            else {
+                auxprintMatrix(matrix);
+                printf(KMAG "\nScore: %d", score);
+                printf(KWHT "\n");
+            }
+            if (gameState(matrix) == -1) {
+                printf(KRED "Game Over!\n");
+                freeMemoryIfFailed(matrix, SIZE);
+                freeMemoryIfFailed(tmpMat, SIZE);
+                free(matrix);
+                matrix = NULL;
+                free(tmpMat);
+                tmpMat = NULL;
+                printf(KWHT "\n");
+                exit(0);
+            }
+            else {
+                if (gameState(matrix) == 1) {
+                    printf(KRED "You won!\n");
+                    freeMemoryIfFailed(matrix, SIZE);
+                    freeMemoryIfFailed(tmpMat, SIZE);
+                    free(matrix);
+                    matrix = NULL;
+                    free(tmpMat);
+                    tmpMat = NULL;
+                    printf(KWHT "\n");
+                    exit(0);
+                }
+            }
+        }
+        fclose(file1);
+    }
+}
