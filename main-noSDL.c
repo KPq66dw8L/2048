@@ -26,10 +26,6 @@ int main () {
     matrix = matrixGenerator(matrix);
     // Clear everything above in the terminal
     clearTerm();
-    // Scoreboard
-    newScore(38);
-    printScoreboard();
-    exit(0);
     // Create and print initial matrix
     startGame(matrix);
     // Current score
@@ -99,8 +95,6 @@ int main () {
             free(tmpMat);
             tmpMat = NULL;
 
-            newScore(score);
-            printScoreboard();
             printf(KWHT "\n");
             exit(0);
         }
@@ -114,8 +108,6 @@ int main () {
                 free(tmpMat);
                 tmpMat = NULL;
 
-                newScore(score);
-                printScoreboard();
                 printf(KWHT "\n");
                 exit(0);
             }
